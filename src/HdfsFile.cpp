@@ -65,13 +65,18 @@ bool HdfsFile::openWrite() {
     return false;
   }
 
-  if (hdfsExists(fileSys, filename.c_str()) == 0) {
-    flags = O_WRONLY|O_APPEND; // file exists, append to it.
+  if (hdfsExists(fileSys, filename.c_str()) == 0 && errno == 0) {
+//    flags = O_WRONLY|O_APPEND; // file exists, append to it.
+    flags = O_WRONLY; // append not supported in many installations.
+  } else if (errno == 0){
+    flags = O_WRONLY|O_CREAT;
   } else {
-    flags = O_WRONLY;
+    // Error, throw exception
+    throw std::runtime_error("hdfsExists call failed");
   }
+
   hfile = hdfsOpenFile(fileSys, filename.c_str(), flags, 0, 0, 0);
-  if (hfile) {
+  if (hfile && errno == 0) {
     if (flags & O_APPEND) {
       LOG_OPER("[hdfs] opened for append %s", filename.c_str());
     } else {
@@ -156,6 +161,11 @@ void HdfsFile::listImpl(const std::string& path,
   }
 
   int value = hdfsExists(fileSys, path.c_str());
+  if (value == -1 && errno == 0) {
+    // no file or directory at path
+    LOG_OPER("[hdfs] listImpl: %s doesn't exist", path.c_str());
+    return;
+  }
   if (value == 0) {
     int numEntries = 0;
     hdfsFileInfo* pHdfsFileInfo = 0;
@@ -170,7 +180,7 @@ void HdfsFile::listImpl(const std::string& path,
       }
       hdfsFreeFileInfo(pHdfsFileInfo, numEntries);
     // A NULL indicates error
-    } else {
+    } else if ( errno != 0 ) {
       throw std::runtime_error("hdfsListDirectory call failed");
     }
   } else if (value == -1) {
