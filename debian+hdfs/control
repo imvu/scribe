@@ -1,0 +1,20 @@
+Source: scribe-hdfs
+Section: devel
+Priority: extra
+Maintainer: Wes Mitchell <wmitchell@mail-relay-outgoing.prod.imvu.com>
+Build-Depends: debhelper (>= 7), python (>= 2.6), libthrift,
+ libfb303, libboost1.40-dev, libevent-dev, libhdfs0-dev, hadoop-0.20-source
+Standards-Version: 3.8.3
+
+Package: scribe-hdfs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.6), libthrift,
+ libfb303, libevent-1.4-2, libhdfs0,
+ libboost-filesystem1.40.0, libboost-system1.40.0 
+Conflicts: scribe
+Description: Scribe log aggregating server with hdfs support
+ Scribe is a server for aggregating log data that's streamed in real
+ time from clients. It is designed to be scalable and reliable.
+ See the Scribe Wiki for documentation:
+ http://wiki.github.com/facebook/scribe
+

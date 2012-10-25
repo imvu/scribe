@@ -1,0 +1,18 @@
+Source: scribe
+Section: devel
+Priority: extra
+Maintainer: Wes Mitchell <wmitchell@mail-relay-outgoing.prod.imvu.com>
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.3
+
+Package: scribe
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, python (>= 2.6), libthrift,
+ libfb303, libboost-dev, libevent
+Conflicts: scribe-hdfs 
+Description: Scribe log aggregating server without hdfs support
+ Scribe is a server for aggregating log data that's streamed in real
+ time from clients. It is designed to be scalable and reliable.
+ See the Scribe Wiki for documentation:
+ http://wiki.github.com/facebook/scribe
+

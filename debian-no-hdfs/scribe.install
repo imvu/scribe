@@ -1,0 +1,4 @@
+usr/bin
+usr/lib/*.a
+usr/lib/python2.6/site-packages/scribe/*.py
+usr/lib/python2.6/site-packages/scribe*egg-info
